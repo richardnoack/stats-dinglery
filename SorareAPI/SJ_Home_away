@@ -1,0 +1,34 @@
+query {
+  club(slug: "sj-earthquakes-santa-clara-california") {
+    activePlayers {
+      nodes {
+        displayName
+        allSo5Scores(first: 10) {
+          nodes {
+            position
+            playerGameStats {
+              minsPlayed
+            }
+
+            score
+            game {
+              date
+              awayTeam {
+                __typename
+                ... on Club {
+                  name
+                }
+              }
+              homeTeam {
+                __typename
+                ... on Club {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
