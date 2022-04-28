@@ -44,6 +44,7 @@ s.team_name
 , r.xga as opp_xga
 , r.xgf as opp_xgf
 , s.date
+, RANK() OVER(PARTITION BY s.team_name ORDER by s.date asc) as next_rank
 from curated.schedule s
 LEFT JOIN ratings r ON
 r.team_short_name = s.opp_short_name 
@@ -62,6 +63,20 @@ team_name
 , ROUND(AVG(opp_xga),2) as avg_opp_xga ###higher is better  , it's how many xG the opp give up
 , ROUND(AVG(opp_xgf),2) as avg_opp_xgf ### lower is better, it's the avg xGF of the opps
 , STRING_AGG(IF(location = 'home', UPPER(opp_short_name), LOWER(opp_short_name)), ' | ' ORDER BY date ASC) as next_opps
+, MAX(IF(next_rank = 1, opp_xga, null)) as next_xga_1
+, MAX(IF(next_rank = 2, opp_xga, null)) as next_xga_2
+, MAX(IF(next_rank = 3, opp_xga, null)) as next_xga_3
+, MAX(IF(next_rank = 4, opp_xga, null)) as next_xga_4
+, MAX(IF(next_rank = 5, opp_xga, null)) as next_xga_5
+, MAX(IF(next_rank = 6, opp_xga, null)) as next_xga_6
+, MAX(IF(next_rank = 7, opp_xga, null)) as next_xga_7
+, MAX(IF(next_rank = 1, opp_xgf, null)) as next_xgf_1
+, MAX(IF(next_rank = 2, opp_xgf, null)) as next_xgf_2
+, MAX(IF(next_rank = 3, opp_xgf, null)) as next_xgf_3
+, MAX(IF(next_rank = 4, opp_xgf, null)) as next_xgf_4
+, MAX(IF(next_rank = 5, opp_xgf, null)) as next_xgf_5
+, MAX(IF(next_rank = 6, opp_xgf, null)) as next_xgf_6
+, MAX(IF(next_rank = 7, opp_xgf, null)) as next_xgf_7
 FROM schedule_creation
 GROUP BY 1,2
 ORDER BY avg_opp_xgf 
